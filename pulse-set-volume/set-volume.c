@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <pulse/pulseaudio.h>
+#include <glib.h>
 
 static int index = 0;
 static double percent = 0.3;
