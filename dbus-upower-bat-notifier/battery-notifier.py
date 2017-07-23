@@ -33,7 +33,7 @@ def notify_battery_percentage(percentage):
 def signal_handler(iface, properties, _):
     if 'Percentage' in properties:
         percentage = properties['Percentage']
-        print('battery is at %d percent' % percentage)
+        notify_battery_percentage(percentage)
 
 
 battery = bus.get_object('org.freedesktop.UPower', battery_path)
@@ -44,7 +44,7 @@ percentage = battery_properties.Get('org.freedesktop.UPower.Device', 'Percentage
 
 notify_battery_percentage(percentage)
 
-battery_properties.connect_to_signal('PropertiesChanged', signal_handler, dbus_interface='org.freedesktop.DBus.Properties')
+battery_properties.connect_to_signal('PropertiesChanged', signal_handler)
 
 loop = GLib.MainLoop()
 loop.run()
