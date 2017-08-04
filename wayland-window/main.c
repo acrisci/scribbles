@@ -108,13 +108,13 @@ create_tmpfile_cloexec(char *tmpname)
  * SCM_RIGHTS methods.
  */
 static void
-paint_pixels() {
+paint_pixels(uint32_t color) {
     int n;
     uint32_t *pixel = shm_data;
 
     fprintf(stderr, "Painting pixels\n");
     for (n =0; n < WIDTH*HEIGHT; n++) {
-        *pixel++ = 0xffff;
+        *pixel++ = color;
     }
 }
 
@@ -207,6 +207,23 @@ static const struct wl_registry_listener registry_listener = {
 
 int main(int argc, char **argv) {
 
+    uint32_t color = 0xffffff;
+
+    if (argc > 1) {
+        char *name = argv[1];
+        if (strcmp(name, "white") == 0) {
+            color = 0xfffff;
+        } else if (strcmp(name, "red") == 0) {
+            color = 0xff0000;
+        } else if (strcmp(name, "blue") == 0) {
+            color = 0x0000ff;
+        } else if (strcmp(name, "green") == 0) {
+            color = 0x00ff00;
+        } else {
+            printf("got unknown color: %s. using white.", name);
+        }
+    }
+
     display = wl_display_connect(NULL);
     if (display == NULL) {
         fprintf(stderr, "Can't connect to display\n");
@@ -251,7 +268,7 @@ int main(int argc, char **argv) {
 
 
     create_window();
-    paint_pixels();
+    paint_pixels(color);
 
     while (wl_display_dispatch(display) != -1) {
         ;
