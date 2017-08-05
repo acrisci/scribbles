@@ -212,7 +212,7 @@ int main(int argc, char **argv) {
     if (argc > 1) {
         char *name = argv[1];
         if (strcmp(name, "white") == 0) {
-            color = 0xfffff;
+            color = 0xffffff;
         } else if (strcmp(name, "red") == 0) {
             color = 0xff0000;
         } else if (strcmp(name, "blue") == 0) {
