@@ -26,10 +26,19 @@ include_directories(
 set(CMAKE_C_STANDARD 11)
 
 set(SOURCE_FILES main.c shared/os-compatibility.c)
-add_executable(untitled ${SOURCE_FILES})
+add_executable(shm-test ${SOURCE_FILES})
 
 target_link_libraries(
-		untitled
+		shm-test
 		${WAYLAND_LIBRARIES}
 )
 
+
+add_executable(egl-test main-egl.c)
+
+target_link_libraries(
+		egl-test
+		${WAYLAND_LIBRARIES}
+        ${EGL_LIBRARIES}
+        ${GLESv2_LIBRARIES}
+)

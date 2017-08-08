@@ -177,6 +177,7 @@ struct wl_shm_listener shm_listener = {
 global_registry_handler(void *data, struct wl_registry *registry, uint32_t id,
         const char *interface, uint32_t version)
 {
+    fprintf(stderr, "global add: %s (v%d)\n", interface, version);
     if (strcmp(interface, "wl_compositor") == 0) {
         compositor = wl_registry_bind(registry,
                 id,
@@ -252,15 +253,15 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Created surface\n");
     }
 
+    shell_surface = wl_shell_get_shell_surface(shell, surface);
+    if (shell_surface == NULL) {
+        fprintf(stderr, "Can't create shell surface\n");
+        exit(1);
+    } else {
+        fprintf(stderr, "Created shell surface\n");
+    }
     /*
-   shell_surface = wl_shell_get_shell_surface(shell, surface);
-   if (shell_surface == NULL) {
-   fprintf(stderr, "Can't create shell surface\n");
-   exit(1);
-   } else {
-   fprintf(stderr, "Created shell surface\n");
-   }
-   wl_shell_surface_set_toplevel(shell_surface);
+    wl_shell_surface_set_toplevel(shell_surface);
 
    wl_shell_surface_add_listener(shell_surface,
    &shell_surface_listener, NULL);
