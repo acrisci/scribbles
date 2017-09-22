@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import gi
+import cgi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib, Gdk
 import signal
@@ -12,7 +13,7 @@ class InfoWindow(Gtk.Window):
 	def __init__(self):
 		super().__init__()
 
-		self.monospace = lambda s: '<span font="monospace">{}</span>'.format(s)
+		self.monospace = lambda s: '<span font="monospace">{}</span>'.format(cgi.escape(s))
 
 		self.connect('destroy', Gtk.main_quit)
 		self.props.title = 'test-window'
@@ -32,11 +33,16 @@ class InfoWindow(Gtk.Window):
 		self.button_label.set_markup(self.monospace('waiting for button...'))
 		self.box.pack_start(self.button_label, True, True, 0)
 
+		self.scroll_label = Gtk.Label()
+		self.scroll_label.set_markup(self.monospace('waiting for scroll...'))
+		self.box.pack_start(self.scroll_label, True, True, 0)
+
 		self.connect('button-press-event', self.button_handler)
 		self.connect('button-release-event', self.button_handler)
 		self.connect('enter-notify-event', self.enter_handler)
 		self.connect('leave-notify-event', self.enter_handler)
 		self.connect('motion-notify-event', self.motion_handler)
+		self.connect('scroll-event', self.scroll_handler)
 
 		self.show_all()
 		self.props.window.set_events(Gdk.EventMask.ALL_EVENTS_MASK)
@@ -60,6 +66,14 @@ class InfoWindow(Gtk.Window):
 		y = round(e.y, 4)
 		text = 'motion: x={} y={}'.format(x, y)
 		self.motion_label.set_markup(self.monospace(text))
+
+	def scroll_handler(self, widget, e):
+		x = round(e.x, 4)
+		y = round(e.y, 4)
+		dx = round(e.delta_x, 4)
+		dy = round(e.delta_y, 4)
+		text = 'axis: x={} y={} dx={} dy={}'.format(x, y, dx, dy)
+		self.scroll_label.set_markup(self.monospace(text))
 
 w = InfoWindow()
 
